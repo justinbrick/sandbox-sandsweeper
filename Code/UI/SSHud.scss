@@ -1,0 +1,111 @@
+﻿// Stylesheet, contains all of our important goodies.
+
+$gray: rgb(180,180,180);
+$light-gray: rgb(255,255,255);
+$dark-gray: rgb(70,70,70);
+
+rootpanel {
+  font-family: DeterminationMono;
+  display: flex;
+  flex-direction: column;
+  background-color: $gray;
+  pointer-events: all;
+  border: 1% solid $light-gray;
+  border-right-color: $dark-gray;
+  border-bottom-color: $dark-gray;
+  
+  // When we lose, we want the image to be of sad man crying in agony!!!! :(((
+  &.fail {
+    .TopBar {
+      .restart_button {
+        background-image: url("/Assets/game_lost.png");
+      }
+    }
+  }
+
+  // When we win, we want the background image to be of the happy epic face :))
+  &.win {
+    .TopBar {
+      .restart_button {
+        background-image: url("/Assets/game_over.png");
+      }
+    }
+  }
+  
+  .TopBar {
+    align-self: center;
+    justify-content: center;
+    align-items: center;
+    background-color: $gray;
+    width: 90%;
+    height: 10%;
+    margin: 2.5%;
+    border: 1% solid $light-gray;
+    border-right-color: $dark-gray;
+    border-bottom-color: $dark-gray;
+
+    // This is the button we can use to restart the game.
+    .restart_button {
+      height: 80%;
+      aspect-ratio: 1;
+      background-image: url("/Assets/normal.png");
+      background-size: cover;
+    }
+    
+    // This is the timer we're using to track how long it takes for someone to beat the game.
+    .timer {
+      position: absolute;
+      left: 5%;
+      height: 80%;
+      width: 20%;
+      background-color: black;
+      color: green;
+      border-radius: 5%;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 50%; 
+    }
+  }
+}
+
+.Board {
+  align-self: center;
+  padding: 0;
+  flex-wrap: wrap;
+  background-color: $light-gray;
+  width: 800px;
+  height: 800px;
+}
+
+.Tile {
+  padding: 0;
+  background-color: $gray;
+  border: 10% solid $light-gray;
+  border-right-color: $dark-gray;
+  border-bottom-color: $dark-gray;
+  font-size: 25%;
+  text-align: center;
+
+  // Center the text
+  justify-content: center;
+  align-items: center;
+  
+  
+  &.revealed {
+    border: 5% solid $dark-gray;
+    // If this is a mine, we'll have an icon on it.
+    &.mine {
+      background-image: url("/Assets/bomb.png");
+      background-size: cover;
+    }
+  }
+  
+  // If the slot has been marked, then we'll give it the flag.
+  &.marked {
+    background-image: url("/Assets/flag.png");
+    background-size: cover;
+  }
+}
+
+
