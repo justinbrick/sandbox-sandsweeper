@@ -1,13 +1,16 @@
 ﻿using System;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Linq;
 using Sandbox;
 using Sandbox.UI;
 
 namespace SandSweeper
 {
-	public class SSTile : Label
+	public partial class SSTile : Label
 	{
 		private static Random _rand = new();
+		public static SSTile HoveredTile = null;
 		public bool IsMine;
 
 		private State _state = State.Hidden;
@@ -33,27 +36,17 @@ namespace SandSweeper
 					var (x, y) = Position;
 					var max = instance.BoardSize.Item1;
 
-
-					var nearbyMines = GetNearbyMines();
-					if ( nearbyMines == 0 )
+					var nearby = NearbyTiles().ToArray();
+					int mines = nearby.Count( tile => tile.IsMine );
+					if ( mines == 0 )
 					{
-						for ( int i = -1; i < 2; ++i )
-						{
-							for ( int j = -1; j < 2; ++j )
-							{
-								var (xx, yy) = (x + i, y + j);
-								if ( xx >= max || xx < 0 || yy >= max || yy < 0 ) continue;
-								var tile = instance.Board[xx, yy];
-								if ( tile == this || tile.State == State.Revealed ) continue;
-								tile.State = State.Revealed;
-							}
-						}
-
+						foreach ( var tile in nearby ) 
+							if ( tile.State is not State.Revealed ) tile.State = State.Revealed;
 						return;
 					}
 
-					Style.Content = nearbyMines.ToString();
-					Style.FontColor = nearbyMines switch
+					Style.Content = mines.ToString();
+					Style.FontColor = mines switch
 					{
 						1 => Color.Blue,
 						2 => Color.Green,
@@ -68,13 +61,16 @@ namespace SandSweeper
 		{
 			ChangeMineStatus();
 		}
-
-		public int GetNearbyMines()
+		
+		/// <summary>
+		/// Get the tiles near this one tile.
+		/// </summary>
+		/// <returns>Enumerable of SSTile</returns>
+		public IEnumerable<SSTile> NearbyTiles()
 		{
 			var instance = SSBoard.Instance;
 			var (x, y) = Position;
 			var max = instance.BoardSize.Item1;
-			int nearbyMines = 0;
 			for ( int i = -1; i < 2; ++i )
 			{
 				for ( int j = -1; j < 2; ++j )
@@ -83,11 +79,9 @@ namespace SandSweeper
 					if ( xx >= max || xx < 0 || yy >= max || yy < 0 ) continue;
 					var tile = instance.Board[xx, yy];
 					if ( tile == this ) continue;
-					if ( tile.IsMine ) ++nearbyMines;
+					yield return tile;
 				}
 			}
-
-			return nearbyMines;
 		}
 
 		// Change the status of the mine; NOTE: This might not need to be this way, I moved this into this function as a helper but I realized that resetting the board also takes into account the size of it.
@@ -95,6 +89,20 @@ namespace SandSweeper
 		{
 			IsMine = _rand.Next( 0, 6 ) == 3;
 			SetClass( "mine", IsMine );
+		}
+
+		// You asked for this, now you get it, jerks.
+		[ClientRpc]
+		public static void RevealNear()
+		{
+			if ( HoveredTile is null ) return;
+			Log.Info( "Revealing Nearby" );
+			var nearby = HoveredTile.NearbyTiles().ToArray();
+			var mines = nearby.Count( tile => tile.IsMine );
+			var flags = nearby.Count( tile => tile.State is State.Marked );
+			if ( mines != flags ) return;
+			foreach ( var tile in nearby.Where( tile => tile.State is not State.Marked ) ) 
+				tile.State = State.Revealed;
 		}
 		
 		protected override void OnClick( MousePanelEvent e )
@@ -108,6 +116,12 @@ namespace SandSweeper
 			if ( State == State.Revealed ) return;
 			State = (State == State.Hidden) ? State.Marked : State.Hidden;
 			base.OnRightClick( e );
+		}
+
+		protected override void OnMouseOver( MousePanelEvent e )
+		{
+			base.OnMouseOver( e );
+			HoveredTile = this;
 		}
 	}
 
