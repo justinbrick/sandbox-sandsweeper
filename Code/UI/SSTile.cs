@@ -32,7 +32,11 @@ namespace SandSweeper
 						return;
 					}
 
-					if ( instance.HasWon() ) SSHud.Instance.RootPanel.SetClass("win", true); //!instance.Failed && 
+					if ( instance.HasWon() )
+					{
+						SSHud.Instance.RootPanel.SetClass("win", true);
+						SSHud.Instance.TimerStopped = true;
+					}
 					var (x, y) = Position;
 					var max = instance.BoardSize.Item1;
 
@@ -96,7 +100,6 @@ namespace SandSweeper
 		public static void RevealNear()
 		{
 			if ( HoveredTile is null ) return;
-			Log.Info( "Revealing Nearby" );
 			var nearby = HoveredTile.NearbyTiles().ToArray();
 			var mines = nearby.Count( tile => tile.IsMine );
 			var flags = nearby.Count( tile => tile.State is State.Marked );
