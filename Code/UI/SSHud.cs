@@ -28,7 +28,7 @@ namespace SandSweeper
 		{
 			if ( !IsClient || _instance is not null ) return;
 			_instance = this;
-			Log.Info("Running SSHud"  );
+			Log.Info("Running SSHud");
 			RootPanel.StyleSheet.Load("/UI/SSHud.scss");
 			var topBar = RootPanel.Add.Panel("TopBar");
 			_board = RootPanel.AddChild<SSBoard>("Board"); // Add the board to the game

@@ -1,2 +1,8 @@
+# IDE Files
 .idea/
 .intermediate/
+/.vs
+
+/Code/.vs/sandsweeper/FileContentIndex # Not too sure what this is.
+/Code/obj # Just compilation targets
+/Code/.vs/sandsweeper/FileContentIndex

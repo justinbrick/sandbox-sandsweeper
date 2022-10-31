@@ -1,5 +1,31 @@
 {
-	"sharedassets": "*.*",
-	"ident": "justin.sandsweeper",
-	"type": "game"
+  "Title": "Sandbox Sandsweeper",
+  "Type": "game",
+  "Org": "justin",
+  "Ident": "sandbox-sandsweeper",
+  "Tags": "retro,2d",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "ResourcePaths": null,
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": null,
+  "Metadata": {
+    "MaxPlayers": 0,
+    "MinPlayers": 0,
+    "ParentPackage": "",
+    "GameNetworkType": "Multiplayer",
+    "MapSelect": "Unrestricted",
+    "PerMapRanking": false,
+    "RankType": "None",
+    "GameCategory": "None",
+    "PackageSettings": [
+      {
+        "Choices": [],
+        "ConVarName": "",
+        "DisplayName": "New Setting..."
+      }
+    ]
+  }
 }

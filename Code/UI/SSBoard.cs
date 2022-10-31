@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Sandbox;
-using Sandbox.DataModel;
 using Sandbox.UI;
 
 namespace SandSweeper
@@ -14,6 +13,7 @@ namespace SandSweeper
 			set => _instance ??= value;
 		}
 		public (int, int) BoardSize;
+		public Panel[] Rows;
 		public SSTile[,] Board;
 		public bool Failed = false;
 		
@@ -25,25 +25,22 @@ namespace SandSweeper
 		public void Reset()
 		{
 			Failed = false;
-			var (x, y) = BoardSize;
+			var (width, height) = BoardSize;
 			if (Board is not null)
 				foreach ( var tile in Board )
 					tile.Delete();
-			Board = new SSTile[x, y];
-			int i = 1;
-			for ( int xx = 0; xx < x; ++xx )
+			Board = new SSTile[width, height];
+			Rows = new Panel[width];
+
+			// For the entire board's height, add our rows.
+			for (int i = 0; i < width; ++i)
 			{
-				for ( int yy = 0; yy < y; ++yy )
+				var row = Rows[i] = AddChild<Panel>("row");
+				for (int j = 0; j < height; ++j)
 				{
-					var tile = AddChild<SSTile>("Tile");
-					tile.Position = (xx, yy);
-					tile.Style.Height = Length.Percent(100.0f/x-float.Epsilon*2);
-					tile.Style.Width = Length.Percent(100.0f/x-float.Epsilon*2);
-					
-					tile.Style.ZIndex = i;
-					tile.Style.Dirty();
-					Board[xx, yy] = tile;
-					++i;
+					var tile = row.AddChild<SSTile>("Tile");
+					tile.Position = (i, j);
+					Board[i, j] = tile;
 				}
 			}
 			

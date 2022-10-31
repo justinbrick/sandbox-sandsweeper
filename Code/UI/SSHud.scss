@@ -72,14 +72,22 @@ rootpanel {
 .Board {
   align-self: center;
   padding: 0;
-  flex-wrap: wrap;
   background-color: $light-gray;
   width: 800px;
   height: 800px;
+
+  // Each row in the board.
+  .row {
+      flex-direction: row;
+      flex-wrap: wrap;
+      flex-basis: 100%;
+      padding: 0;
+  }
 }
 
 .Tile {
   padding: 0;
+  margin: 0;
   background-color: $gray;
   border: 10% solid $light-gray;
   border-right-color: $dark-gray;
@@ -90,14 +98,16 @@ rootpanel {
   // Center the text
   justify-content: center;
   align-items: center;
-  
+
+  flex-direction: column;
+  flex-basis: 100%;
   
   &.revealed {
-    border: 5% solid $dark-gray;
+    border: 10% solid $dark-gray;
     // If this is a mine, we'll have an icon on it.
     &.mine {
       background-image: url("/Assets/bomb.png");
-      background-size: cover;
+      background-size: contain;
     }
   }
   
